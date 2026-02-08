@@ -6,6 +6,7 @@ import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
+import RedirectHome from "./RedirectHome";
 
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
@@ -13,6 +14,10 @@ import PublicRoute from "./PublicRoute";
 export default function AppRoutes() {
   return (
     <Routes>
+
+      
+  {/* ROOT */}
+  <Route path="/" element={<RedirectHome />} />
 
       {/* PUBLIC ROUTES */}
       <Route
