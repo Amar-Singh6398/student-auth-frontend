@@ -1,19 +1,24 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { FiLock, FiRefreshCw } from "react-icons/fi";
 import AuthLayout from "../layouts/AuthLayout";
+import Spinner from "../components/Spinner";
 
 function ResetPassword() {
   const { token } = useParams();
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMsg("");
     setError("");
+    setLoading(true);
 
     try {
       const res = await axios.post(
@@ -21,10 +26,16 @@ function ResetPassword() {
         { password }
       );
       setMsg(res.data.message);
-    } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong");
-    }
-  };
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 800);
+  }catch(err){
+    setMsg(err.response?.data.msg || "Not able to sent email!, try agian");
+  }finally{
+    setLoading(false);
+  }
+};
 
   return (
     <AuthLayout>
@@ -65,7 +76,7 @@ function ResetPassword() {
             transition
           "
         >
-          Reset Password <FiRefreshCw />
+          {loading ? <Spinner /> : <> Reset Password  <FiRefreshCw /></>}
         </button>
 
         {/* Success Message */}

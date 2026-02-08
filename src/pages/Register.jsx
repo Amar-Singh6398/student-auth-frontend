@@ -1,7 +1,9 @@
 import { useState } from "react";
-import API from "../api/axios";
+import API, { setAuthToken } from "../api/axios";
 import { FiMail, FiLock, FiUser, FiLogIn } from "react-icons/fi";
 import AuthLayout from "../layouts/AuthLayout";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../components/Spinner";
 
 
 export default function Register() {
@@ -9,16 +11,34 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState("");
+
+  const navigate = useNavigate();
+
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMsg("");
+
     try {
       const res = await API.post("/api/auth/register", { name, email, password });
-      alert(res.data.message);
-      window.location.href = "/login";
+      const {token} = res.data;
+
+      localStorage.setItem("token", token);
+      setAuthToken(token);
+
+      setMsg("Register sucessful! Redirecting...");
+
+      setTimeout(() =>{
+        navigate("/login");
+      }, 800);
+     
     } catch (err) {
-        console.log(err.response); // see exact backend error in console
-      alert(err.response?.data?.message || "Registration failed!");
-    }
+        setMsg(err.response?.data?.msg || "Login Failed");
+    }finally{
+      setLoading(false);
+    }    
   };
 
   return (<AuthLayout>
@@ -67,10 +87,21 @@ export default function Register() {
       {/* Register Button */}
       <button
         type="submit"
+        disabled={loading}
         className="w-full py-2 rounded-lg uppercase text-black font-bold bg-btn_color hover:bg-btn_hover_color transition flex items-center justify-center gap-2"
       >
-        Register <FiLogIn className="text-lg" />
+        {loading ? <Spinner /> : <>Register <FiLogIn /></>}
+
       </button>
+
+       {/* MESSAGE */}
+       {msg && (
+          <p className="text-center text-sm text-white">
+            {msg}
+          </p>
+        )}
+
+
     </form>
   </AuthLayout>
 );

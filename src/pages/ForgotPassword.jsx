@@ -2,21 +2,32 @@ import { useState } from "react";
 import axios from "axios";
 import { FiMail, FiSend } from "react-icons/fi";
 import AuthLayout from "../layouts/AuthLayout";
+import Spinner from "../components/Spinner";
+
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMsg(""); 
+
     try {
       const res = await axios.post(
         "http://localhost:5000/api/auth/forgot-password",
         { email }
+
       );
-      setMsg(res.data.message);
+      setMsg("Password reset link sent to your email");
+
     } catch (err) {
-      setMsg(err.response.data.message);
+      setMsg(err.response?.data?.msg || "Forgot Password faild!");
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -51,7 +62,8 @@ function ForgotPassword() {
             bg-btn_color hover:bg-btn_hover_color transition
           "
         >
-          Send Reset Link <FiSend />
+          {loading ? <Spinner /> : <>Send Reset Link <FiSend /></>}
+
         </button>
 
         {msg && (
