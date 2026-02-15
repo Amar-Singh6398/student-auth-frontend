@@ -23,7 +23,7 @@ export default function Sidebar({ collapsed, setCollapsed,activeTab, setActiveTa
       {/* Profile */}
       <div className="p-4 cursor-pointer" onClick={() => setShowDetails(!showDetails)}>
         <div className="flex items-center gap-3">
-          <img src={"/logo192.png" } alt="Profile" className="w-10 h-10 rounded-full" />
+          <img src={"./assests/logo192.png" } alt="Profile" className="w-10 h-10 rounded-full" />
           {!collapsed && <p className="font-semibold">{currentUser.name}</p>}
         </div>
 

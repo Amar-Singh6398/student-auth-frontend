@@ -11,6 +11,8 @@ import RedirectHome from "./RedirectHome";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
+import CourseDetails from "../pages/CourseDetails";
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -40,6 +42,8 @@ export default function AppRoutes() {
 
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+      <Route path="/courses/:id" element={<CourseDetails />} />
 
       {/* PROTECTED ROUTES */}
       <Route
