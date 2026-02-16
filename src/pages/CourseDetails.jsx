@@ -1,9 +1,40 @@
-import { modulesData } from "../mock/moduleData";
+import { useState } from "react";
+import { modulesData as initialModules } from "../mock/moduleData";
 
 export default function CourseDetails() {
 
+  const [modules, setModules] = useState(initialModules);
+  const [activeVideo, setActiveVideo] = useState(null);
+
+  const isModuleUnlocked = (index) =>{
+    if(index===0) return true;
+
+    return modules[index - 1].lessons.every(
+      (lesson) => lesson.completed 
+    )
+  }
+
+  const toggleLessonCompleted = (moduleId, lessonIndex) => {
+    setModules((prev) =>
+      prev.map((mod) => {
+        if (mod.id !== moduleId) return mod;
+  
+        const updatedLessons = mod.lessons.map((lesson, i) =>
+          i === lessonIndex
+            ? { ...lesson, completed: true }
+            : lesson
+        );
+  
+        return { ...mod, lessons: updatedLessons };
+      })
+    );
+  };
+  
+
  
   return (
+   
+    
     <div className="max-w-6xl mx-auto space-y-6">
 
       {/* HEADER SECTION */}
@@ -19,7 +50,7 @@ export default function CourseDetails() {
     </h1>
 
     <span className="text-xs text-gray-400">
-      45% Completed
+      25% Completed
     </span>
   </div>
 
@@ -27,7 +58,7 @@ export default function CourseDetails() {
   <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
     <div
       className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-500"
-      style={{ width: "45%" }}
+      style={{ width: "25%" }}
     />
   </div>
 
@@ -60,52 +91,77 @@ export default function CourseDetails() {
 
       </div>
 
+      {activeVideo && (
+      <div className="mb-6">
+        <iframe
+          src={activeVideo}
+          className="w-full h-[400px] rounded-xl"
+          allowFullScreen
+        />
+      </div>
+    )}
+
       {/* MODULES */}
       <div className="space-y-3">
+      {modules.map((module, moduleIndex) => (
+  <div key={module.id} className="bg-slate-800 rounded-xl p-4 mb-4">
 
-  {modulesData.map((module) => (
-    <div
-      key={module.id}
-      className={`rounded-xl border border-white/10 overflow-hidden
-        ${module.unlocked ? "bg-slate-800" : "bg-slate-800/50"}
-      `}
-    >
+    {/* MODULE HEADER */}
+    <div className="flex justify-between items-center">
+      <h3 className="font-semibold">{module.title}</h3>
 
-      {/* Header */}
-      <details className="group">
-        <summary
-          className="list-none cursor-pointer flex justify-between items-center p-4"
-        >
-          <span className="font-medium">{module.title}</span>
-
-          {module.unlocked ? (
-            <span className="text-green-400 text-sm">Start</span>
-          ) : (
-            <span className="text-gray-400 text-sm">Locked</span>
-          )}
-        </summary>
-
-        {/* Content */}
-        <div className="px-4 pb-4 space-y-2">
-
-          {module.lessons.map((lesson, i) => (
-            <div
-              key={i}
-              className={`flex items-center gap-2 text-sm p-2 rounded-lg
-                ${module.unlocked
-                  ? "bg-slate-900 hover:bg-slate-700 cursor-pointer"
-                  : "bg-slate-900/40 text-gray-500 cursor-not-allowed"}
-              `}
-            >
-              ▶ {lesson}
-            </div>
-          ))}
-
-        </div>
-      </details>
-
+      {module.lessons.every(l => l.completed)
+        ? <span className="text-green-400 text-sm">Completed</span>
+        : module.unlocked
+        ? <span className="text-blue-400 text-sm">Start</span>
+        : <span className="text-gray-400 text-sm">Locked</span>
+      }
     </div>
-  ))}
+
+    {/* LESSONS */}
+    <div className="mt-3 space-y-2">
+      {module.lessons.map((lesson, idx) => (
+        <div
+          key={idx}
+          onClick={() => {
+            if (!module.unlocked){
+               alert("Finish previous module");
+               return
+            }
+
+            setActiveVideo(lesson.videoUrl);
+          }}
+          className={`p-2 rounded-lg flex justify-between items-center
+            ${module.unlocked
+              ? "bg-slate-900 hover:bg-slate-700 cursor-pointer"
+              : "bg-slate-900/40 text-gray-500 cursor-not-allowed"}
+          `}
+        >
+          <span>{lesson.title}</span>
+
+          <input
+            type="checkbox"
+            checked={lesson.completed}
+            onChange={(e) => {
+              const updated = [...modules];
+              updated[moduleIndex].lessons[idx].completed = e.target.checked;
+
+              const allCompleted = 
+              (updated[moduleIndex].lessons.every(l => l.completed)) 
+
+                if (updated[moduleIndex + 1]) {
+                  updated[moduleIndex + 1 ].unlocked = allCompleted;
+                }
+              
+
+              setModules(updated);
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+))}
 
 </div>
 

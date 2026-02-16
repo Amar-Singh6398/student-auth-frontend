@@ -4,10 +4,26 @@ export const modulesData = [
       title: "Basic",
       unlocked: true,
       lessons: [
-        "HTML Fundamentals",
-        "CSS Basics",
-        "JavaScript Basics",
-        "Git & GitHub",
+        {
+          title: "HTML Basics",
+          videoUrl: "https://www.youtube.com/embed/BsDoLVMnmZs",
+          completed: false,
+        },
+        {
+          title: "CSS Basics",
+          videoUrl: "https://www.youtube.com/embed/Edsxf_NBFrw",
+          completed: false,
+        },
+        {
+          title: "JavaScript Basics",
+          videoUrl: "https://www.youtube.com/embed/hKB-YGF14SY",
+          completed: false,
+        },
+        {
+          title: "Git & GitHub",
+          videoUrl: "https://www.youtube.com/embed/gwWKnnCMQ5c",
+          completed: false,
+        },
       ],
     },
     {
@@ -15,10 +31,14 @@ export const modulesData = [
       title: "Intermediate",
       unlocked: false,
       lessons: [
-        "React Fundamentals",
-        "State & Props",
-        "API Integration",
-        "Authentication",
+        {
+         title:"React Fundamentals",
+         videoUrl: "https://www.youtube.com/embed/-mJFZp84TIY" ,
+         completed:false 
+        },
+        {title:"State & Props", completed:false},
+        {title:"API Integration", completed:false},
+        {title:"Authentication", completed:false},
       ],
     },
     {
@@ -26,10 +46,10 @@ export const modulesData = [
       title: "Advanced",
       unlocked: false,
       lessons: [
-        "Node.js & Express",
-        "MongoDB",
-        "Full Stack Auth",
-        "Deployment",
+        {title:"Node.js & Express", completed:false},
+        {title:"MongoDB", completed:false},
+        {title:"Full Stack Auth", completed:false},
+        {title:"Deployment", completed:false},
       ],
     },
   ];
