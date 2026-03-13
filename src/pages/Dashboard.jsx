@@ -1,14 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import API, { setAuthToken } from "../api/axios";
-import logout from "../utils/logout";
-
+import { useState, useEffect } from "react";
+import useAuth from "../hooks/useAuth";
 import DashboardLayout from "../layouts/dashboardlayout";
 
 // Student Pages
 import DashboardHome from "./DashboardHome";
 import MyCourses from "./MyCourses";
-import Assessments from "./Assessments";
+// import Assessments from "./Assessments";
 import Settings from "./Settings";
 import CourseDetails from "./CourseDetails";
 
@@ -16,14 +13,11 @@ import CourseDetails from "./CourseDetails";
 import AdminOverview from "./AdminOverview";
 import StudentManagement from "./StudentManagement";
 import CourseManagement from "./CourseManagement";
+import AIStudyAssistant from "../components/AIStudyAssistant";
 
 export default function Dashboard() {
-  const navigate = useNavigate();
-
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useAuth();
   const [selectedCourseId, setSelectedCourseId] = useState(null);
-
   const [activeTab, setActiveTab] = useState(
     () => localStorage.getItem("activeTab") || "Dashboard"
   );
@@ -37,21 +31,6 @@ export default function Dashboard() {
     if (id) setSelectedCourseId(id);
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) return navigate("/login");
-
-    setAuthToken(token);
-
-    API.get("/api/auth/me")
-      .then((res) => {
-        setUserData(res.data.user);
-        setLoading(false);
-      })
-      .catch(() => logout(navigate));
-  }, [navigate]);
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
@@ -63,11 +42,11 @@ export default function Dashboard() {
     );
   }
 
-  const isAdmin = userData?.role === "admin";
+  const isAdmin = user?.role === "admin";
 
   return (
     <DashboardLayout
-      user={userData}
+      user={user}
       activeTab={activeTab}
       setActiveTab={setActiveTab}
     >
@@ -96,6 +75,8 @@ export default function Dashboard() {
           {activeTab === "Course Management" && <CourseManagement />}
         </>
       )}
+
+      <AIStudyAssistant />
 
     </DashboardLayout>
   );

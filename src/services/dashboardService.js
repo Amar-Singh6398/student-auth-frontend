@@ -1,11 +1,11 @@
-import API from '../api/axios';
+import API from './api';
 
 export const getStudentStats = async () => {
-  const response = await API.get('/api/dashboard/student');
+  const response = await API.get('/dashboard/student');
   return response.data;
 };
 
 export const getAdminStats = async () => {
-  const response = await API.get('/api/dashboard/admin');
+  const response = await API.get('/dashboard/admin');
   return response.data;
 };

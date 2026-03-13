@@ -1,11 +1,12 @@
 import { useState } from "react";
-import API, { setAuthToken } from "../api/axios";
 import { Mail, Lock, User, ArrowRight, UserPlus, Github } from "lucide-react";
 import AuthLayout from "../layouts/AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import useAuth from "../hooks/useAuth";
 
 export default function Register() {
+  const { register } = useAuth();
   const [formData, setFormData] = useState({ name: "", email: "", password: "", role: "student" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -20,13 +21,8 @@ export default function Register() {
     setSuccess(false);
 
     try {
-      const res = await API.post("/api/auth/register", formData);
-      const { token } = res.data;
-
-      localStorage.setItem("token", token);
-      setAuthToken(token);
+      await register(formData);
       setSuccess(true);
-
       setTimeout(() => navigate("/dashboard"), 1200);
     } catch (err) {
       setError(err.response?.data?.msg || "Registration failed. Please try again.");

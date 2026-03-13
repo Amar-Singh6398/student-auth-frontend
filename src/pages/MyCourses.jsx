@@ -20,7 +20,20 @@ export default function MyCourses({ onNavigate }) {
     const fetchCourses = async () => {
       try {
         const data = await getMyCourses();
-        setCourses(data || []);
+        // Map Enrollment model to UI Course view
+        const mapped = data.map(enrollment => ({
+          _id: enrollment.course?._id,
+          id: enrollment._id, // Use enrollment ID for unique key if needed
+          title: enrollment.course?.title,
+          image: enrollment.course?.image,
+          instructor: enrollment.course?.instructor,
+          category: enrollment.course?.category,
+          progress: enrollment.progress || 0,
+          completed: enrollment.lessonsCompleted || 0,
+          lessons: enrollment.course?.totalLessons || 0,
+          lastAccessed: enrollment.lastAccessedAt ? new Date(enrollment.lastAccessedAt).toLocaleDateString() : 'Never'
+        }));
+        setCourses(mapped);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching courses:", err);

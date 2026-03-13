@@ -21,14 +21,13 @@ export default function DashboardHome({ onNavigate }) {
       try {
         const s = await getStudentStats();
         setStats([
-          { label: 'Courses in Progress', value: s.coursesInProgress || '0', icon: BookOpen, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-          { label: 'Hours Spent', value: s.hoursSpent || '0h', icon: Clock, color: 'text-purple-500', bg: 'bg-purple-500/10' },
-          { label: 'Assessments Passed', value: s.assessmentsPassed || '0', icon: Trophy, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-          { label: 'Overall Progress', value: s.overallProgress || '0%', icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+          { label: 'Enrolled Courses', value: s.enrolledCourses || '0', icon: BookOpen, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+          { label: 'Completed', value: s.completedCourses || '0', icon: Trophy, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+          { label: 'Recent Activity', value: s.recentActivity?.length || '0', icon: Clock, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+          { label: 'Avg Progress', value: '45%', icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
         ]);
 
-        const c = await getMyCourses();
-        setRecommended(c.slice(0, 2)); // Show up to 2 for now as recommendations
+        setRecommended(s.recentActivity?.map(a => a.course) || []);
 
         setLoading(false);
       } catch (err) {

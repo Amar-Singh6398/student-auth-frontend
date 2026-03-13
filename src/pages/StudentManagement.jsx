@@ -17,7 +17,7 @@ import {
     BookPlus,
     BarChart3
 } from 'lucide-react';
-import API from '../api/axios';
+import API from '../services/api';
 import { adminGetCourses, adminEnrollStudent, getPlatformProgress } from '../services/courseService';
 
 export default function StudentManagement() {
@@ -47,7 +47,7 @@ export default function StudentManagement() {
     const fetchInitialData = async () => {
         try {
             const [studentRes, courseData, progress] = await Promise.all([
-                API.get('/api/auth/students'),
+                API.get('/auth/students'),
                 adminGetCourses(),
                 getPlatformProgress()
             ]);
@@ -76,12 +76,12 @@ export default function StudentManagement() {
         e.preventDefault();
         try {
             if (isEditingStudent) {
-                await API.put(`/api/auth/students/${selectedStudent._id}`, {
+                await API.put(`/auth/students/${selectedStudent._id}`, {
                     name: newStudent.name,
                     email: newStudent.email
                 });
             } else {
-                await API.post('/api/auth/students/create', newStudent);
+                await API.post('/auth/students', newStudent);
             }
             setShowCreateModal(false);
             fetchInitialData();
@@ -109,7 +109,7 @@ export default function StudentManagement() {
     const handleDelete = async (id) => {
         if (window.confirm("Remove this student from the platform?")) {
             try {
-                await API.delete(`/api/auth/students/${id}`);
+                await API.delete(`/auth/students/${id}`);
                 setStudents(prev => prev.filter(s => s._id !== id));
             } catch (err) {
                 alert("Failed to remove student");

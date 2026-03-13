@@ -1,11 +1,12 @@
 import { useState } from "react";
-import API, { setAuthToken } from "../api/axios";
 import AuthLayout from "../layouts/AuthLayout";
 import { Mail, Lock, LogIn, Github, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import useAuth from "../hooks/useAuth";
 
 export default function Login() {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,13 +22,8 @@ export default function Login() {
     setSuccess(false);
 
     try {
-      const res = await API.post("/api/auth/login", { email, password });
-      const { token } = res.data;
-
-      localStorage.setItem("token", token);
-      setAuthToken(token);
+      await login(email, password);
       setSuccess(true);
-
       setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err) {
       setError(err.response?.data?.msg || "Invalid credentials. Please try again.");

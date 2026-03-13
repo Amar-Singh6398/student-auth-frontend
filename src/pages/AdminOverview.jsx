@@ -34,10 +34,10 @@ export default function AdminOverview({ onNavigate }) {
     if (loading) return <div className="text-center py-20 font-bold text-muted-foreground">Syncing Dashboard...</div>;
 
     const statsConfig = [
-        { label: 'Total Students', value: data?.stats?.totalStudents || '0', growth: '+5%', trend: 'up', icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-        { label: 'Total Courses', value: data?.stats?.totalCourses || '0', growth: '+2', trend: 'up', icon: BookOpen, color: 'text-purple-500', bg: 'bg-purple-500/10' },
-        { label: 'Active Students', value: data?.stats?.activeStudents || '0', growth: '+1%', trend: 'up', icon: Calendar, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-        { label: 'Total Revenue', value: `$${data?.stats?.revenue || '0'}`, growth: '+10%', trend: 'up', icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+        { label: 'Total Students', value: data?.totalStudents || '0', growth: '+5%', trend: 'up', icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+        { label: 'Total Courses', value: data?.totalCourses || '0', growth: '+2', trend: 'up', icon: BookOpen, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+        { label: 'Enrollments', value: data?.totalEnrollments || '0', growth: '+1%', trend: 'up', icon: Calendar, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+        { label: 'Revenue', value: `$${data?.revenue || '0'}`, growth: '+10%', trend: 'up', icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
     ];
 
     return (
@@ -112,18 +112,18 @@ export default function AdminOverview({ onNavigate }) {
                                         <td className="px-8 py-5">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-black text-sm border border-primary/20">
-                                                    {item.name.charAt(0)}
+                                                    {item.student?.name?.charAt(0) || '?'}
                                                 </div>
                                                 <div>
-                                                    <p className="font-black">{item.name}</p>
-                                                    <p className="text-[10px] font-medium text-muted-foreground">{item.email}</p>
+                                                    <p className="font-black">{item.student?.name || 'Unknown'}</p>
+                                                    <p className="text-[10px] font-medium text-muted-foreground">{item.student?.email}</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-5 font-bold">
-                                            {item.course}
+                                            {item.course?.title || 'Course'}
                                         </td>
-                                        <td className="px-6 py-5 text-muted-foreground font-medium">{item.date}</td>
+                                        <td className="px-6 py-5 text-muted-foreground font-medium">{new Date(item.createdAt).toLocaleDateString()}</td>
                                         <td className="px-8 py-5 text-right">
                                             <button className="p-2 hover:bg-secondary rounded-xl text-muted-foreground transition-all">
                                                 <MoreHorizontal size={18} />

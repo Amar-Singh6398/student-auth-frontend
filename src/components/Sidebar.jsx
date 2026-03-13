@@ -16,11 +16,12 @@ import {
   Award
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
-import logout from "../utils/logout";
+import { useTheme } from "../context/ThemeContext";
+import useAuth from "../hooks/useAuth";
 
 export default function Sidebar({ collapsed, setCollapsed, activeTab, setActiveTab, user }) {
+  const { logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [showProfileDetails, setShowProfileDetails] = useState(false);
@@ -109,7 +110,12 @@ export default function Sidebar({ collapsed, setCollapsed, activeTab, setActiveT
                     {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
                   </button>
                   <button
-                    onClick={(e) => { e.stopPropagation(); logout(navigate); }}
+                    onClick={(e) => { 
+                      e.stopPropagation(); 
+                      logout(); 
+                      navigate("/login");
+                      localStorage.removeItem("activeTab");
+                    }}
                     className="p-2 hover:bg-destructive/10 text-destructive rounded-lg transition-colors"
                   >
                     <LogOut size={14} />
